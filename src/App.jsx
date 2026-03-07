@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import "./App.css";
 
 function App() {
-	const [name, setName] = useState("Your FullName");
-	const [title, setTitle] = useState("Your Title/Role");
+	const [name, setName] = useState("");
+	const [title, setTitle] = useState("");
 	const [photo, setPhoto] = useState(null);
 	const fileInputRef = useRef(null);
 	const flyerRef = useRef(null);
@@ -93,7 +93,7 @@ function App() {
 							type="text"
 							name="fullname"
 							id="title"
-							placeholder="Enter your FullName"
+							placeholder="Enter your Role/Title"
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}
 						/>
@@ -276,7 +276,7 @@ function App() {
 								textTransform: "uppercase",
 							}}
 						>
-							{name}
+							{name || "OWOEYE EMMANUEL"}
 						</h2>
 						<p
 							style={{
@@ -289,7 +289,7 @@ function App() {
 								textTransform: "uppercase",
 							}}
 						>
-							{title}
+							{title || "REGULAR MEMBER"}
 						</p>
 					</div>
 				</div>
