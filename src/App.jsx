@@ -10,9 +10,9 @@ function App() {
 
 	const handleFile = (file) => {
 		if (!file || !file.type.startsWith("image/")) return;
-		const reader = new FileReader();
-		reader.onload = (e) => setPhoto(e.target.result);
-		reader.readAsDataURL(file);
+		const localPhotoUrl = URL.createObjectURL(file);
+
+		setPhoto(localPhotoUrl);
 	};
 
 	const handleDownload = async () => {
@@ -29,18 +29,22 @@ function App() {
 
 			// Give the browser a split second to ensure styles are computed
 			const canvas = await html2canvas(flyerRef.current, {
-				scale: 3,
+				scale: 4,
 				useCORS: true,
 				allowTaint: false,
 				logging: true,
 				imageTimeout: 0,
 				onclone: (clonedDoc) => {
-					const element = clonedDoc.querySelector("[ref]");
-					if (element) element.style.imageRendering = "crisp-edges";
+					const flyer = clonedDoc.body.firstChild;
+					console.log({ flyer });
+					if (flyer) {
+						flyer.style.imageRendering = "high-quality";
+						flyer.style.transform = "none"; // Removes any shifts during export
+					}
 				},
 			});
 
-			const dataUrl = canvas.toDataURL("image/png");
+			const dataUrl = canvas.toDataURL("image/png", 1.0);
 
 			// Fallback for some browsers: explicitly creating the download
 			const link = document.createElement("a");
@@ -209,19 +213,27 @@ function App() {
 						<div
 							style={{
 								position: "relative",
+								display: "flex",
+								alignContent: "center",
+								justifyContent: "center",
 								left: "253.26px",
 								top: "64.5px",
 								height: "258.5px",
 								borderRadius: "33px",
 								width: "178px",
 								overflow: "hidden",
-								backgroundImage: `url(${photo})`,
-								backgroundSize: "cover",
-								backgroundPosition: "top center",
-								backgroundRepeat: "no-repeat",
-								backgroundColor: "#3DAFF9",
 							}}
-						></div>
+						>
+							<img
+								src={photo}
+								alt="photo"
+								crossOrigin="anonymous"
+								style={{
+									width: "auto",
+									height: "100%",
+								}}
+							/>
+						</div>
 					) : (
 						<div
 							style={{
